@@ -6,31 +6,32 @@ var PlayerView = Backbone.View.extend({
   el: '<audio controls autoplay />',
 
   initialize: function() {
+    this.$el.on('ended', (function() { 
+      this.model.ended }).bind(this) );
   },
 
+  // OUR VERSION
+  // setSong: function(song){
+  //   this.model = song;
+  //   this.render();
+  // },
+
+  // SOLUTION LECTURE
   setSong: function(song){
     this.model = song;
+    if(!this.model) {
+      this.el.pause();
+    }
     this.render();
   },
 
+// this properly allows the player to move to the next song
   events: {
     'ended': function() {
-      // console.log(this.model);
-      // console.log(this.model.collection.at(1));
-      // console.log(app.songQueue);
-      this.model.dequeue();
-      this.remove(this.model.collection.at(0));
-      this.setSong(this.model.collection.at(0));
+      this.model.ended();
     }
   },
 
-  // this.on('ended', function(song) {
-  //   this.dequeue();
-  //   // this.remove(this.models[0]);
-  //   if(this.length > 0) {
-  //     this.playFirst();
-  //   }
-  // });  
 
   render: function(){
     return this.$el.attr('src', this.model ? this.model.get('url') : '');

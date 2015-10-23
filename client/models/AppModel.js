@@ -19,19 +19,13 @@ var AppModel = Backbone.Model.extend({
 
     params.library.on('enqueue', function(song) {
       this.get('songQueue').add(song);
-      // this.attributes.songQueue.push(song);
     }, this);
 
-    params.library.on('click', function(song) {
-      console.log(this);
-      // how do we pick out the specific song we are clicking
-      //this.set('songQueueView', new songQueueView());
-      //this.get('songQueueView').add(song);
-    });
+    // Doesn't seem to do much, but from solution lecture
+    this.get('songQueue').on('stop', function() {
+      this.set('currentSong', null)
+    }, this);
 
-    //params.library.on('dequeue', function() {});
-
-    // params.library.on('ended', function() {});    
   }
 
 });
