@@ -5,32 +5,22 @@ var SongQueue = Songs.extend({
 
   initialize: function(){
     
-    this.on('add', function() {
-      if(this.length === 1) {
-        
-        this.playFirst();
-      } 
-
-    });
+    this.on('add', this.enqueue, this);
 
     this.on('dequeue', this.dequeue, this);
-
-    // this.on('dequeue', function() {
-    //   this.dequeue(this);
-    // }, this);
 
     this.on('ended', this.playNext, this);
   },
 
-  playFirst: function() {
-    this.models[0].play();
+  enqueue: function() {
+    if(this.length === 1) {
+      this.playFirst();
+    }
   },
 
-  // dequeue: function() {
-  //   if (this.length > 0) {
-  //     this.remove(this.at(0));
-  //   }
-  // },
+  playFirst: function() {
+    this.at(0).play();
+  },
 
   dequeue: function(song) {
     if ( this.at(0) === song ) {
@@ -41,9 +31,8 @@ var SongQueue = Songs.extend({
   },
 
   playNext: function() {
-    // this => the song, not the collection
     this.shift();
-    if ( this.length >= 1 ) {   //
+    if ( this.length >= 1 ) {   
       this.playFirst();
     } else {
       this.trigger('stop');
